@@ -2,61 +2,45 @@ package com.example.myweather
 
 import android.os.Bundle
 import android.util.Log
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import com.example.myweather.data.MyWeatherDataModel
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProvider
+import com.example.myweather.api.MyWeatherServiceInterface
+import com.example.myweather.api.RetrofitHelper
+import com.example.myweather.databinding.ActivityMainBinding
+import com.example.myweather.respository.WeatherRepository
+import com.example.myweather.viewmodel.MainViewModel
+import com.example.myweather.viewmodel.MainViewModelFactory
 
 
 class MainActivity : AppCompatActivity() {
 
+    private lateinit var binding: ActivityMainBinding
+    private lateinit var mainViewModel: MainViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
-        val btn = findViewById<Button>(R.id.scBtn)
-        btn.setOnClickListener { getMyWeather() }
+        val weatherService =
+            RetrofitHelper.getRetrofitInstance().create(MyWeatherServiceInterface::class.java)
+
+        val repository = WeatherRepository(weatherService)
+
+        mainViewModel =
+            ViewModelProvider(this, MainViewModelFactory(repository)).get(MainViewModel::class.java)
+
+        mainViewModel.weather.observe(this) {
+            Log.d("testmvvm", it.main.temp.toString())
+            binding.mainTemperature.text = it.main.temp.toString().plus(" ").plus("\u2103")
+            binding.max.text = it.main.temp_max.toString().plus(" ").plus("\u2103")
+            binding.min.text = it.main.temp_min.toString().plus(" ").plus("\u2103")
+            binding.cityName.text = it.name
+            binding.pressure.text = it.main.pressure.toString().plus("mbar")
+            binding.wind.text = it.wind.speed.toString().plus("km/h")
+        }
+
+        binding.mainViewModel = mainViewModel
+
     }
-
-    private fun getMyWeather() {
-        val scText = findViewById<EditText>(R.id.scText)
-        var myCitySearch = scText.text.toString()
-        val myCityWeather = WeatherService.weatherInstance.getWeather(myCitySearch,"metric")
-        myCityWeather.enqueue(object: Callback<MyWeatherDataModel>{
-            override fun onResponse(
-                call: Call<MyWeatherDataModel>,
-                response: Response<MyWeatherDataModel>
-            ) {
-                val myCityWeatherFinal = response.body()
-                if(myCityWeatherFinal != null){
-                    Log.d("testres","passssss")
-                    var myCityName: TextView = findViewById<TextView>(R.id.cityName)
-                    var myCityTemp: TextView = findViewById<TextView>(R.id.mainTemperature)
-                    var myCityMax: TextView = findViewById<TextView>(R.id.max)
-                    var myCityMin: TextView = findViewById<TextView>(R.id.min)
-                    var myCityPressure: TextView = findViewById<TextView>(R.id.pressure)
-                    var myCityWind: TextView = findViewById<TextView>(R.id.wind)
-
-                    myCityName.text = myCityWeatherFinal.name
-                    myCityTemp.text = myCityWeatherFinal.main.temp.toString().plus(" ").plus("\u2103")
-
-                    myCityMax.text = myCityWeatherFinal.main.temp_max.toString().plus(" ").plus("\u2103")
-                    myCityMin.text = myCityWeatherFinal.main.temp_min.toString().plus(" ").plus("\u2103")
-                    myCityPressure.text = myCityWeatherFinal.main.pressure.toString().plus(" ").plus("mbar")
-                    myCityWind.text = myCityWeatherFinal.wind.speed.toString().plus(" ").plus("km/h")
-                }
-
-            }
-
-            override fun onFailure(call: Call<MyWeatherDataModel>, t: Throwable) {
-                Log.d("testres","fail")
-            }
-        })
-    }
-
-
 }

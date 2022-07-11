@@ -1,8 +1,6 @@
-package com.example.myweather.data
+package com.example.myweather.dataModels
 
-import com.example.myweather.data.*
-
-data class MyWeatherDataModel(
+data class MyWeather(
     val base: String,
     val clouds: Clouds,
     val cod: Int,
