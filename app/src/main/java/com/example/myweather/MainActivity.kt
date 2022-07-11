@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import com.bumptech.glide.Glide
 import com.example.myweather.api.MyWeatherServiceInterface
 import com.example.myweather.api.RetrofitHelper
 import com.example.myweather.databinding.ActivityMainBinding
@@ -36,7 +37,11 @@ class MainActivity : AppCompatActivity() {
             binding.max.text = it.main.temp_max.toString().plus(" ").plus("\u2103")
             binding.min.text = it.main.temp_min.toString().plus(" ").plus("\u2103")
             binding.cityName.text = it.name
-            binding.pressure.text = it.main.pressure.toString().plus("mbar")
+            Glide.with(this)
+                .load("https://openweathermap.org/img/w/".plus(it.weather[0].icon).plus(".png"))
+                .into(binding.icon)
+            binding.desc.text = it.weather[0].description
+            binding.humidity.text = it.main.humidity.toString().plus("%")
             binding.wind.text = it.wind.speed.toString().plus("km/h")
         }
 
