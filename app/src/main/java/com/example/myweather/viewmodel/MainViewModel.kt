@@ -12,12 +12,12 @@ import kotlinx.coroutines.launch
 
 //Parameterized ViewModel so it requires a factory.
 class MainViewModel(private val repository: WeatherRepository) : ViewModel() {
-    var city: String? = null
+    var location: String? = null
 
     fun setOnSearchbtnClick() {
         viewModelScope.launch(Dispatchers.IO) {
             //MainViewModel calls getWeather to fetch weather info
-            repository.getWeather(city!!, "metric")
+            repository.getWeather(location!!, "metric")
         }
     }
 
