@@ -45,7 +45,6 @@ class MainActivity : AppCompatActivity() {
             ViewModelProvider(this, MainViewModelFactory(repository)).get(MainViewModel::class.java)
 
         mainViewModel.weather.observe(this) {
-            Log.d("testmvvm", it.main.temp.toString())
             binding.mainTemperature.text = it.main.temp.toString().plus(" ").plus("\u2103")
             binding.max.text = it.main.temp_max.toString().plus(" ").plus("\u2103")
             binding.min.text = it.main.temp_min.toString().plus(" ").plus("\u2103")

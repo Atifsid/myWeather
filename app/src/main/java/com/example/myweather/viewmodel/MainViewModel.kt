@@ -17,7 +17,7 @@ class MainViewModel(private val repository: WeatherRepository) : ViewModel() {
     fun setOnSearchbtnClick() {
         viewModelScope.launch(Dispatchers.IO) {
             //MainViewModel calls getWeather to fetch weather info
-            repository.getWeather(location!!, "metric")
+            repository.getWeather(location!!.trim(), "metric")
         }
     }
 
