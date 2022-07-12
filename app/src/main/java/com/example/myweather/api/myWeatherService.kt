@@ -11,5 +11,8 @@ const val myApiKey: String = BuildConfig.API_KEY
 
 interface MyWeatherServiceInterface {
     @GET("data/2.5/weather?appid=$myApiKey")
-    suspend fun getWeather(@Query("q") city: String, @Query("units") units: String) : Response<MyWeather>
+    suspend fun getWeather(
+        @Query("q") city: String,
+        @Query("units") units: String
+    ): Response<MyWeather>
 }

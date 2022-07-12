@@ -2,6 +2,7 @@ package com.example.myweather
 
 import android.os.Bundle
 import android.util.Log
+import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
@@ -12,6 +13,7 @@ import com.example.myweather.databinding.ActivityMainBinding
 import com.example.myweather.respository.WeatherRepository
 import com.example.myweather.viewmodel.MainViewModel
 import com.example.myweather.viewmodel.MainViewModelFactory
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 
 class MainActivity : AppCompatActivity() {
@@ -22,6 +24,17 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+
+        binding.info.setOnClickListener {
+            MaterialAlertDialogBuilder(this)
+                .setTitle(resources.getString(R.string.title))
+                .setMessage(resources.getString(R.string.supporting_text))
+                .setNeutralButton(resources.getString(R.string.cancel)) { dialog, _ ->
+                    // Respond to neutral button press
+                    dialog.dismiss()
+                }
+                .show()
+        }
 
         val weatherService =
             RetrofitHelper.getRetrofitInstance().create(MyWeatherServiceInterface::class.java)
@@ -48,4 +61,5 @@ class MainActivity : AppCompatActivity() {
         binding.mainViewModel = mainViewModel
 
     }
+
 }
