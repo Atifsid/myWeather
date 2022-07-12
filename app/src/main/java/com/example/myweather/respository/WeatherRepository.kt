@@ -11,10 +11,10 @@ class WeatherRepository(private val myWeatherService: MyWeatherServiceInterface)
     private val weatherLiveData = MutableLiveData<MyWeather>()
     //Will be called in MainViewModel.
     val weather: LiveData<MyWeather>
-    get() = weatherLiveData
+        get() = weatherLiveData
 
-    suspend fun getWeather(city: String, units: String) {
-        val result = myWeatherService.getWeather(city,units)
+    suspend fun getWeather(location: String, units: String) {
+        val result = myWeatherService.getWeather(location,units)
         if(result?.body() != null){
             weatherLiveData.postValue(result.body())
         }
