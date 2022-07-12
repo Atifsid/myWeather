@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">myWeather</string>
+    <string name="title">Why temp_min and temp_max are equal to temp?</string>
+    <string name="supporting_text" translatable="false">temp_min and temp_max reflect deviations in measurement for the given city. If they are equal to temp then either all weather stations are perfect or there is just one for the whole city.</string>
+    <string name="cancel">Okay</string>
 </resources>

@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="mainViewModel"
             type="com.example.myweather.viewmodel.MainViewModel" />
@@ -39,7 +40,7 @@
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/scText"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="250dp"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:hint="Enter a location"
             android:textAlignment="center"
@@ -55,13 +56,16 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
-        <ImageButton
+        <ImageView
             android:id="@+id/scBtn"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:onClick="@{() -> mainViewModel.setOnSearchbtnClick()}"
+            android:paddingStart="10dp"
+            android:paddingTop="10dp"
+            android:scaleType="centerCrop"
             app:layout_constraintBottom_toBottomOf="@+id/scText"
+            app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintStart_toEndOf="@+id/scText"
             app:layout_constraintTop_toBottomOf="@id/vertical"
             app:srcCompat="@drawable/ic_baseline_search_24" />
@@ -95,8 +99,8 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/inter_bold"
             android:hint="N/A"
-            android:textSize="35sp"
             android:padding="5dp"
+            android:textSize="35sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/scText" />
@@ -108,12 +112,12 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/inter_bold"
             android:hint="N/A"
+            android:padding="5dp"
             android:textSize="50sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:padding="5dp"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/maxImg"
@@ -230,6 +234,16 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             app:layout_constraintGuide_percent="0.90" />
+
+        <ImageView
+            android:id="@+id/info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toTopOf="@id/minImg"
+            app:layout_constraintEnd_toStartOf="@id/guideline4"
+            app:layout_constraintStart_toEndOf="@id/guideline3"
+            app:layout_constraintTop_toBottomOf="@id/icon"
+            app:srcCompat="@drawable/ic_baseline_help_outline_24" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
