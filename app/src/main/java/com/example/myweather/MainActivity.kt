@@ -36,9 +36,9 @@ class MainActivity : AppCompatActivity() {
             binding.mainTemperature.text = it.main.temp.toString().plus(" ").plus("\u2103")
             binding.max.text = it.main.temp_max.toString().plus(" ").plus("\u2103")
             binding.min.text = it.main.temp_min.toString().plus(" ").plus("\u2103")
-            binding.cityName.text = it.name
+            binding.locName.text = it.name.plus(",").plus(it.sys.country)
             Glide.with(this)
-                .load("https://openweathermap.org/img/w/".plus(it.weather[0].icon).plus(".png"))
+                .load("https://openweathermap.org/img/wn/".plus(it.weather[0].icon).plus("@4x.png"))
                 .into(binding.icon)
             binding.desc.text = it.weather[0].description
             binding.humidity.text = it.main.humidity.toString().plus("%")
