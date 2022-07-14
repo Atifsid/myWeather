@@ -1,6 +1,9 @@
 package com.example.myweather
 
+import android.Manifest
 import android.os.Bundle
+import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
@@ -12,6 +15,8 @@ import com.example.myweather.respository.WeatherRepository
 import com.example.myweather.viewmodel.MainViewModel
 import com.example.myweather.viewmodel.MainViewModelFactory
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
+import com.sembozdemir.permissionskt.askPermissions
 
 
 class MainActivity : AppCompatActivity() {
@@ -21,6 +26,35 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        this.askPermissions(Manifest.permission.INTERNET) {
+            onGranted { Log.d("Permissions", "Internet permissions granted") }
+            onDenied { permissions ->
+                permissions.forEach {
+                    when (it) {
+                        Manifest.permission.INTERNET -> Toast.makeText(
+                            this@MainActivity,
+                            "Allow internet permissions from settings",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                }
+            }
+            onShowRationale { request ->
+                Snackbar.make(
+                    binding.coordinatorLayout,
+                    "You should grant Camera permission",
+                    Snackbar.LENGTH_INDEFINITE
+                )
+                    .setAction("Retry") { request.retry() }
+                    .show()
+            }
+            onNeverAskAgain {
+                finish()
+            }
+        }
+
+
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
         binding.info.setOnClickListener {
