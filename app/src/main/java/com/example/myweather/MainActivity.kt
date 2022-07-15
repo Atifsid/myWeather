@@ -3,15 +3,15 @@ package com.example.myweather
 import android.Manifest
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
-import com.example.myweather.api.MyWeatherServiceInterface
-import com.example.myweather.api.RetrofitHelper
 import com.example.myweather.databinding.ActivityMainBinding
-import com.example.myweather.respository.WeatherRepository
+import com.example.myweather.respository.Response
 import com.example.myweather.viewmodel.MainViewModel
 import com.example.myweather.viewmodel.MainViewModelFactory
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -43,7 +43,7 @@ class MainActivity : AppCompatActivity() {
             onShowRationale { request ->
                 Snackbar.make(
                     binding.coordinatorLayout,
-                    "You should grant Camera permission",
+                    "You should grant Internet permission",
                     Snackbar.LENGTH_INDEFINITE
                 )
                     .setAction("Retry") { request.retry() }
@@ -54,39 +54,53 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
         binding.info.setOnClickListener {
             MaterialAlertDialogBuilder(this)
                 .setTitle(resources.getString(R.string.title))
                 .setMessage(resources.getString(R.string.supporting_text))
-                .setNeutralButton(resources.getString(R.string.cancel)) { dialog, _ ->
+                .setPositiveButton(resources.getString(R.string.cancel)) { dialog, _ ->
                     // Respond to neutral button press
                     dialog.dismiss()
                 }
                 .show()
         }
 
-        val weatherService =
-            RetrofitHelper.getRetrofitInstance().create(MyWeatherServiceInterface::class.java)
-
-        val repository = WeatherRepository(weatherService)
+        val repository = (application as WeatherApplication).weatherRepository
 
         mainViewModel =
             ViewModelProvider(this, MainViewModelFactory(repository)).get(MainViewModel::class.java)
 
-        mainViewModel.weather.observe(this) {
-            binding.mainTemperature.text = it.main.temp.toString().plus(" ").plus("\u2103")
-            binding.max.text = it.main.temp_max.toString().plus(" ").plus("\u2103")
-            binding.min.text = it.main.temp_min.toString().plus(" ").plus("\u2103")
-            binding.locName.text = it.name.plus(",").plus(it.sys.country)
-            Glide.with(this)
-                .load("https://openweathermap.org/img/wn/".plus(it.weather[0].icon).plus("@4x.png"))
-                .into(binding.icon)
-            binding.desc.text = it.weather[0].description
-            binding.humidity.text = it.main.humidity.toString().plus("%")
-            binding.wind.text = it.wind.speed.toString().plus("km/h")
+        mainViewModel.loactionStatus.observe(this, Observer {
+            if(mainViewModel.loactionStatus.value == false) {
+                Toast.makeText(this,"Error 404: No Location found",Toast.LENGTH_SHORT).show()
+            }
+        })
+
+        mainViewModel.weather.observe(this) { fetchedData ->
+            when(fetchedData){
+                is Response.Loading ->{ binding.progressBarCyclic.visibility = View.VISIBLE }
+                is Response.Error ->{
+                    fetchedData.errorMessage
+                    Toast.makeText(this,fetchedData.errorMessage,Toast.LENGTH_SHORT).show()
+                }
+                is Response.Success ->{
+                    fetchedData.data?.let {
+                        binding.mainTemperature.text = it.main.temp.toString().plus(" ").plus("\u2103")
+                        binding.max.text = it.main.temp_max.toString().plus(" ").plus("\u2103")
+                        binding.min.text = it.main.temp_min.toString().plus(" ").plus("\u2103")
+                        binding.locName.text = it.name.plus(",").plus(it.sys.country)
+                        Glide.with(this)
+                            .load("https://openweathermap.org/img/wn/".plus(it.weather[0].icon).plus("@4x.png"))
+                            .into(binding.icon)
+                        binding.desc.text = it.weather[0].description
+                        binding.humidity.text = it.main.humidity.toString().plus("%")
+                        binding.wind.text = it.wind.speed.toString().plus("km/h")
+                    }
+
+                }
+            }
         }
 
         binding.mainViewModel = mainViewModel
