@@ -1,0 +1,40 @@
+name: Generate APK
+on:
+  push:
+    branches: [ master ]
+    
+jobs:
+  # Run some Unit tests before apk
+  # ....
+    
+  # A job to generate debug APK and upload on Github Artifacts
+  apk:
+      name: Generate APK
+      runs-on: ubuntu-latest
+
+      steps:
+        - uses: actions/checkout@v3
+        - name: Setup Java JDK
+          uses: actions/setup-java@v1
+          with:
+            java-version: '17'
+
+        - name: Grant Permission to Execute
+          run: chmod +x gradlew
+          
+        - name: Access API_KEY
+          env:
+            API_KEY: $
+          run: echo API_KEY=\"$API_KEY\" > ./local.properties
+          
+        - name: Build with Gradle
+          run: ./gradlew build --scan
+
+        - name: Build Debug APK
+          run: ./gradlew assembleDebug
+          
+        - name: Upload APK to Github Artifacts
+          uses: actions/upload-artifact@v1
+          with:
+            name: app
+            path: app/build/outputs/apk/debug/app-debug.apk
