@@ -19,7 +19,8 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        buildConfigField "String", "API_KEY", localProperties['apiKey']
+        buildConfigField "String", "API_KEY", localProperties['API_KEY']
+        buildConfigField ("String", "API_KEY", getApiKey())
     }
 
     buildTypes {
@@ -39,6 +40,14 @@ android {
     buildFeatures{
         dataBinding = true
     }
+}
+
+//Generate local.properties for CI
+String getApiKey() {
+    def propFile = rootProject.file("./local.properties")
+    def properties = new Properties()
+    properties.load(new FileInputStream(propFile))
+    return properties['API_KEY']
 }
 
 dependencies {
