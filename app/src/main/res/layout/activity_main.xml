@@ -18,6 +18,19 @@
         android:padding="30dp"
         tools:context=".MainActivity">
 
+        <ProgressBar
+            android:id="@+id/progressBarCyclic"
+            android:layout_width="5dp"
+            android:layout_height="11dp"
+            android:layout_weight="1"
+            android:minWidth="40dp"
+            android:minHeight="40dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <TextView
             android:id="@+id/header_title"
             android:layout_width="wrap_content"
