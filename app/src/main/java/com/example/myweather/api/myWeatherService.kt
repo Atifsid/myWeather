@@ -7,10 +7,10 @@ import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
 
-const val myApiKey: String = BuildConfig.API_KEY
+const val API_KEY: String = BuildConfig.API_KEY
 
 interface MyWeatherServiceInterface {
-    @GET("data/2.5/weather?appid=$myApiKey")
+    @GET("data/2.5/weather?appid=$API_KEY")
     suspend fun getWeather(
         @Query("q") city: String,
         @Query("units") units: String
