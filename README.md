@@ -86,8 +86,9 @@
 - ..
  
 # Installation
-- Download zip file -> extract -> import in android studio
-- Open android studio -> File -> New -> Project from version control -> Enter URL -> Clone
+- Download zip file -> extract -> import in android studio or Open android studio -> File -> New -> Project from version control -> Enter URL -> Clone
+- Build project
+- Goto your local.properties and add API_KEY="your-api-key-here" or goto myweather -> api -> myWeatherService.kt -> replace const val API_KEY: String = BuildConfig.API_KEY with const val API_KEY: String = "your-api-key-here"
 
 # Contributions
 - Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
